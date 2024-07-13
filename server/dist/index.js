@@ -4,7 +4,7 @@ import apolloServer from "./config/apolloServer.js";
 import cors from "cors";
 import { expressMiddleware } from "@apollo/server/express4";
 const app = express();
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || 5000;
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cors());
