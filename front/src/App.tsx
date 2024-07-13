@@ -14,10 +14,8 @@ const App = () => {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log({ todo, completed });
     createTodo({ variables: { todo: todo } });
     if (todoErr) alert("Error");
-    console.log("new todo for handleSubmit", newTodo);
     // setTodos(newTodo?.createTodo, ...todos);
   };
 
@@ -26,13 +24,22 @@ const App = () => {
   }, [data]);
 
   useEffect(() => {
-    console.log("new todo for useEffect", newTodo);
     if (newTodo && newTodo?.createTodo) {
       setTodos([newTodo.createTodo, ...todos]);
     }
   }, [newTodo]);
 
-  // const handleToggle = (data: boolean, id: string) => {};
+  const handleToggle = (data: boolean, id: string) => {
+    console.log(data, id);
+    const updatedTodos = todos.map((todo) => {
+      if (todo.id === id) {
+        return { ...todo, completed: data };
+      } else {
+        return todo;
+      }
+    });
+    setTodos(updatedTodos);
+  };
   return (
     <div className="flex justify-center items-center bg-blue-100">
       <div className="w-full max-w-md px-4 py-8 rounded-md bg-blue-300 shadow-md">
@@ -89,13 +96,23 @@ const App = () => {
                 key={idx}
                 className="flex justify-between items-center bg-white p-4 rounded-md shadow-md mb-4"
               >
-                <p>{todo.todo}</p>
+                <p
+                  className={`${
+                    todo.completed ? "line-through" : ""
+                  } text-base font-medium`}
+                >
+                  {todo.todo}
+                </p>
 
                 <div>
                   <span className="mr-2">
                     {todo.completed ? "Completed" : "pending"}
                   </span>
-                  <input type="checkbox" />
+                  <input
+                    type="checkbox"
+                    checked={todo.completed}
+                    onChange={(e) => handleToggle(e.target.checked, todo.id)}
+                  />
                 </div>
               </div>
             ))}
